@@ -12,7 +12,7 @@
     <meta property="og:title" content="Stream LTX — direct a video stream while it runs" />
     <meta
       property="og:description"
-      content="Block-causal LTX-2.3 for real-time joint audio-video generation. 43 fps on 4xH800 at 512x768, with live instruction switching."
+      content="Block-causal LTX-2.3 for real-time joint audio-video generation. 43 fps of DiT throughput on 4xH800 at 512x768, with live instruction switching."
     />
     <meta property="og:image" content="https://longxiao2001.github.io/StreamLTX/media/posters/hero.jpg" />
     <meta property="og:url" content="https://longxiao2001.github.io/StreamLTX/" />
@@ -56,7 +56,7 @@
             nightfall — and the next second carries it out.
           </p>
           <dl class="spec">
-            <div><dt>Throughput</dt><dd>43 fps</dd></div>
+            <div><dt>DiT throughput</dt><dd>43 fps</dd></div>
             <div><dt>Block</dt><dd>1 second</dd></div>
             <div><dt>Hardware</dt><dd>4 × H800</dd></div>
             <div><dt>Resolution</dt><dd>512 × 768</dd></div>
@@ -64,7 +64,9 @@
           </dl>
           <p class="hero-note">
             Generation runs faster than playback, so a take can be watched as it is produced. Audio
-            and video come out of the same model, in the same block.
+            and video come out of the same model, in the same block. The 43 fps figure is
+            steady-state DiT denoising throughput only — text encoding, VAE and audio decoding and
+            muxing are not counted in it, and first-block latency is a separate number.
           </p>
         </div>
 
@@ -210,7 +212,7 @@
               Inference is split by denoising level rather than by frame. Each GPU keeps one level's
               KV resident and passes latents to the next over NCCL P2P, so blocks flow through the
               levels as a pipeline. With few-step distillation and FlashAttention-3 this reaches 43
-              fps on 4 × H800 at 512 × 768.
+              fps on 4 × H800 at 512 × 768 — DiT only, at steady state.
             </p>
           </li>
         </ol>
