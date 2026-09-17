@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Stream LTX — direct a video stream while it runs</title>
+    <meta
+      name="description"
+      content="Stream LTX rebuilds LTX-2.3 into a block-causal audio-video model that generates one second at a time and accepts new instructions between blocks: actions, dialogue, props, weather and light."
+    />
+    <meta name="theme-color" content="#0a0c12" />
+    <meta property="og:title" content="Stream LTX — direct a video stream while it runs" />
+    <meta
+      property="og:description"
+      content="Block-causal LTX-2.3 for real-time joint audio-video generation. 43 fps on 4xH800 at 512x768, with live instruction switching."
+    />
+    <meta property="og:image" content="./media/posters/hero.jpg" />
+    <meta property="og:type" content="website" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=JetBrains+Mono:wght@400;500;700&family=Noto+Sans+SC:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./assets/styles.css" />
+  </head>
+  <body>
+    <a class="skip" href="#takes">Skip to the takes</a>
+
+    <header class="bar">
+      <a class="wordmark" href="#top">Stream<span>LTX</span></a>
+      <span class="tally" aria-label="Live"><i></i>on air</span>
+      <nav>
+        <a href="#takes">Takes</a>
+        <a href="#control">Control</a>
+        <a href="#method">Method</a>
+        <a href="#notes">Notes</a>
+      </nav>
+    </header>
+
+    <main id="top">
+      <section class="hero">
+        <div class="hero-type">
+          <p class="eyebrow">Block-causal LTX-2.3 · joint audio + video</p>
+          <h1>Direct the stream<br />while it runs.</h1>
+          <p class="lede">
+            Stream LTX rebuilds a bidirectional LTX-2.3 into a block-causal model that emits one
+            second of picture and sound at a time. Because it never looks ahead, you can hand it a
+            new instruction between blocks — a gesture, a spoken line, a prop to pick up, rain,
+            nightfall — and the next second carries it out.
+          </p>
+          <dl class="spec">
+            <div><dt>Throughput</dt><dd>43 fps</dd></div>
+            <div><dt>Block</dt><dd>1 second</dd></div>
+            <div><dt>Hardware</dt><dd>4 × H800</dd></div>
+            <div><dt>Resolution</dt><dd>512 × 768</dd></div>
+            <div><dt>Continuous</dt><dd>10 min</dd></div>
+          </dl>
+          <p class="hero-note">
+            Generation runs faster than playback, so a take can be watched as it is produced. Audio
+            and video come out of the same model, in the same block.
+          </p>
+        </div>
+
+        <figure class="monitor" aria-labelledby="hero-cap">
+          <div class="monitor-head">
+            <span class="tally small"><i></i>live output</span>
+            <span class="blocks-read" data-hero-counter>block 000</span>
+          </div>
+          <video
+            data-hero-video
+            src="./media/hero-loop.mp4"
+            poster="./media/posters/hero.jpg"
+            autoplay
+            muted
+            loop
+            playsinline
+            preload="metadata"
+            aria-label="Looping excerpt of generated output: a mage at a table, a lantern lit beside her"
+          ></video>
+          <div class="monitor-foot">
+            <div class="blockbar" data-hero-bar aria-hidden="true"></div>
+          </div>
+          <figcaption id="hero-cap">
+            Twenty seconds of generated output from the <em>Star lantern</em> take, cropped out of
+            the console recording. Each cell below is one generated block.
+          </figcaption>
+        </figure>
+      </section>
+
+      <section id="takes" class="takes">
+        <header class="sec-head">
+          <p class="eyebrow">Takes</p>
+          <h2>Five runs, uncut</h2>
+          <p class="sec-lede">
+            Every recording below is a screen capture of one continuous run — the console on the
+            left, the live output on the right. Nothing is trimmed or re-timed. Pick a cue to jump
+            to the second it lands.
+          </p>
+        </header>
+
+        <div class="take-tabs" role="tablist" aria-label="Takes" data-tabs></div>
+
+        <div class="take" data-take>
+          <div class="stage">
+            <div class="stage-head">
+              <span class="stage-kind" data-kind></span>
+              <span class="stage-source" data-source></span>
+            </div>
+            <video
+              data-video
+              controls
+              playsinline
+              preload="none"
+              aria-label="Console recording of a Stream LTX run"
+            ></video>
+            <div class="strip" data-strip>
+              <div class="strip-track">
+                <div class="strip-cells" data-cells aria-hidden="true"></div>
+                <b class="strip-head" data-head aria-hidden="true"></b>
+              </div>
+              <div class="strip-legend">
+                <span data-strip-left></span>
+                <span data-strip-right></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="cuesheet">
+            <div class="cuesheet-head">
+              <h3 data-title></h3>
+              <p data-blurb></p>
+            </div>
+            <ol class="cues" data-cues></ol>
+          </div>
+        </div>
+      </section>
+
+      <section id="control" class="control">
+        <header class="sec-head">
+          <p class="eyebrow">Control</p>
+          <h2>What one cue can change</h2>
+          <p class="sec-lede">
+            A cue is a short piece of text. Across the five takes on this page, cues move the
+            character's body, put words in their mouth, make them handle objects, and rewrite the
+            weather and the light — all of it mid-stream, with the set and the character holding
+            still.
+          </p>
+        </header>
+        <div class="classes" data-classes></div>
+      </section>
+
+      <section id="method" class="method">
+        <header class="sec-head">
+          <p class="eyebrow">Method</p>
+          <h2>How it holds together</h2>
+        </header>
+        <ol class="steps">
+          <li>
+            <h3>One-second audio-video blocks</h3>
+            <p>
+              Video and audio latents run at different rates — 3 fps and 25 fps — so a block is cut
+              on a one-second boundary and carries both: 4 + 3<i>k</i> video frames beside 26 +
+              25<i>k</i> audio frames. All six attention paths, including the two cross-modal ones,
+              carry a causal mask, so nothing inside a block can read the future.
+            </p>
+          </li>
+          <li>
+            <h3>Trained twice, the second time on its own output</h3>
+            <p>
+              Teacher forcing on real long video turns the bidirectional diffusion model causal.
+              Resample forcing then rolls the model out without gradients and supervises the next
+              block on the history the model actually produced, which is the distribution it will
+              meet at inference. Both stages use a concatenated layout with one shared RoPE index
+              and a sparse causal mask, so a single forward pass supervises <i>N</i> blocks.
+            </p>
+          </li>
+          <li>
+            <h3>A KV cache with a fixed budget</h3>
+            <p>
+              Long context is split into an anchor, a content memory, and a FIFO of recent blocks.
+              Each layer scores its own keys on attention quality and temporal diversity and evicts
+              down to a top-<i>M</i> budget, so a ten-minute take costs the same per block as the
+              first minute.
+            </p>
+          </li>
+          <li>
+            <h3>Global and local prompts, separated</h3>
+            <p>
+              The global prompt holds the set, the character, and the style. The local prompt holds
+              this shot's action and line. A block cross-attends only to its own local prompt, which
+              is what makes a live swap safe: replace the instruction and the parts you did not
+              touch stay where they were.
+            </p>
+            <p class="step-aside">
+              In the <em>Mascot room</em> take the operator edits the global prompt instead — adding
+              <span class="q">lights off, the room is in darkness</span> — and the room goes dark
+              without the character resetting.
+            </p>
+          </li>
+          <li>
+            <h3>One denoising level per GPU</h3>
+            <p>
+              Inference is split by denoising level rather than by frame. Each GPU keeps one level's
+              KV resident and passes latents to the next over NCCL P2P, so blocks flow through the
+              levels as a pipeline. With few-step distillation and FlashAttention-3 this reaches 43
+              fps on 4 × H800 at 512 × 768.
+            </p>
+          </li>
+        </ol>
+        <div class="figures">
+          <figure>
+            <img src="./media/figures/training.png" alt="Training schematic: teacher forcing and resample forcing stages" loading="lazy" />
+            <figcaption>Teacher forcing and resample forcing, in one concatenated layout.</figcaption>
+          </figure>
+          <figure>
+            <img src="./media/figures/pipeline.png" alt="Inference schematic: denoising levels distributed across GPUs as a pipeline" loading="lazy" />
+            <figcaption>Denoising levels pinned to GPUs; latents pipelined block by block.</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section id="notes" class="notes">
+        <header class="sec-head">
+          <p class="eyebrow">Notes</p>
+          <h2>What this page is</h2>
+        </header>
+        <div class="note-grid">
+          <div>
+            <h3>The recordings</h3>
+            <p>
+              Screen captures of an internal research prototype, at the resolution and frame rate it
+              actually ran. The first seconds of each take are the operator loading a first frame
+              and starting the worker; the block strip begins where generation begins.
+            </p>
+          </div>
+          <div>
+            <h3>Cue timings</h3>
+            <p>
+              Timecodes are read off the console in the recording, so they mark when an instruction
+              reached the model. The result lands a block or two later, which is what you see.
+            </p>
+          </div>
+          <div>
+            <h3>Availability</h3>
+            <p>
+              No code and no weights are released here. This page documents the work and shows what
+              it does.
+            </p>
+          </div>
+          <div>
+            <h3>Credit</h3>
+            <p>
+              Built by Long Xiao during a research internship at Tencent, June–September 2026, on
+              top of LTX-2.3.
+            </p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="foot">
+      <p class="foot-mark">Stream<span>LTX</span></p>
+      <nav class="foot-links">
+        <a href="https://longxiao2001.github.io">Homepage</a>
+        <a href="https://github.com/LongXiao2001">GitHub</a>
+        <a href="mailto:1215497652@qq.com">Email</a>
+      </nav>
+      <p class="foot-fine">Long Xiao · Beihang University · 2026</p>
+    </footer>
+
+    <script src="./assets/takes.js"></script>
+    <script src="./assets/app.js"></script>
+  </body>
+</html>
