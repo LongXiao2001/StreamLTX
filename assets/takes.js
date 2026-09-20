@@ -148,3 +148,10 @@ window.CLASS_INFO = [
       'Wind picking up, cloud shadow crossing, sunlight returning, rain starting and stopping, mist forming, the lights going out. The character and the set survive the change.',
   },
 ];
+
+/* Inference pipeline: one GPU per noise level, plus a fifth for prompt encoding and VAE. */
+window.PIPELINE = {
+  levels: ['Level 1', 'Level 2', 'Level 3', 'Level 4'],
+  tail: 'VAE',
+  steps: 9,
+};

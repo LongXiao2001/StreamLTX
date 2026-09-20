@@ -3,6 +3,7 @@
 
   var takes = window.TAKES || [];
   var classInfo = window.CLASS_INFO || [];
+  var pipeline = window.PIPELINE || { levels: [], tail: 'VAE', steps: 9 };
   var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   function el(id) {
@@ -275,5 +276,108 @@
       heroVideo.removeAttribute('autoplay');
       heroVideo.pause();
     }
+  }
+
+  /* ---------- training schematics ---------- */
+
+  var repeatTag = function (n, tag) {
+    return new Array(n + 1).join(tag);
+  };
+
+  var tf = document.querySelector('[data-fig="tf"]');
+  if (tf) {
+    // teacher forcing: every block shares one timestep
+    tf.innerHTML = repeatTag(8, '<i style="opacity:.62"></i>');
+  }
+
+  var df = document.querySelector('[data-fig="df"]');
+  if (df) {
+    // diffusion forcing: one noise level per block, rising along the sequence
+    var n = 8;
+    var bars = '';
+    for (var b = 0; b < n; b++) {
+      bars += '<i style="opacity:' + (0.16 + (0.92 - 0.16) * (b / (n - 1))).toFixed(3) + '"></i>';
+    }
+    df.innerHTML = bars;
+  }
+
+  var dmd = document.querySelector('[data-fig="dmd"]');
+  if (dmd) {
+    dmd.innerHTML =
+      '<div class="srow"><span class="slabel">30 step</span><span class="dots">' +
+      repeatTag(30, '<i></i>') +
+      '</span></div>' +
+      '<div class="srow"><span class="slabel">4 step</span><span class="dots few">' +
+      repeatTag(4, '<i></i>') +
+      '</span></div>';
+  }
+
+  var attn = document.querySelector('[data-fig="attn"]');
+  if (attn) {
+    attn.innerHTML = [1, 2, 3]
+      .map(function (k) {
+        return (
+          '<div class="seg"><span class="pchip">segment ' +
+          k +
+          ' · prompt ' +
+          k +
+          '</span><div class="blocks">' +
+          repeatTag(4, '<i></i>') +
+          '</div><p class="note">AV blocks in this segment cross-attend to prompt ' +
+          k +
+          ' only</p></div>'
+        );
+      })
+      .join('');
+  }
+
+  /* ---------- inference wavefront ---------- */
+
+  var wfHost = el('wavefront');
+  if (wfHost) {
+    var levels = pipeline.levels;
+    var steps = pipeline.steps;
+    // neighbouring blocks differ in tone so the diagonal stays readable
+    var shades = [93, 83, 73, 64];
+    var shade = function (block) {
+      return shades[(block - 1) % shades.length];
+    };
+    var cell = function (block) {
+      return block >= 1
+        ? '<span class="wf-cell busy" style="--l:' + shade(block) + '">B' + block + '</span>'
+        : '<span class="wf-cell"></span>';
+    };
+
+    var rows = '<div class="wf-row head" style="--steps:' + steps + '">';
+    rows += '<span class="wf-label">time slice →</span>';
+    for (var t = 1; t <= steps; t++) rows += '<span class="wf-th">t' + t + '</span>';
+    rows += '</div>';
+
+    // level k works on block t-k+1 during slice t
+    levels.forEach(function (label, idx) {
+      var k = idx + 1;
+      rows += '<div class="wf-row" style="--steps:' + steps + '">';
+      rows += '<span class="wf-label">GPU ' + k + ' · ' + label + '</span>';
+      for (var t2 = 1; t2 <= steps; t2++) rows += cell(t2 - k + 1);
+      rows += '</div>';
+    });
+
+    // the fifth GPU: async prompt encoding and incremental VAE decoding
+    rows += '<div class="wf-row vae" style="--steps:' + steps + '">';
+    rows += '<span class="wf-label">GPU 5 · ' + pipeline.tail + '</span>';
+    for (var t3 = 1; t3 <= steps; t3++) rows += cell(t3 - levels.length);
+    rows += '</div>';
+
+    wfHost.innerHTML =
+      '<div class="wf">' +
+      rows +
+      '</div><div class="wf-foot">' +
+      '<span><b>B<i>n</i></b> = the nth one-second AV block</span>' +
+      '<span>the diagonal is one block crossing all four noise levels, latents handed on by <b>P2P</b></span>' +
+      '<span>from t' +
+      levels.length +
+      ' it is at <b>steady state</b>: four GPUs on four different blocks, one finished block per slice</span>' +
+      '<span>GPU 5 runs <b>async</b> and never takes a slice of the denoising pipeline</span>' +
+      '</div>';
   }
 })();

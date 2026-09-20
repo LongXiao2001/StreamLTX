@@ -39,7 +39,9 @@
       <nav>
         <a href="#takes">Takes</a>
         <a href="#control">Control</a>
-        <a href="#method">Method</a>
+        <a href="#data">Data</a>
+        <a href="#training">Training</a>
+        <a href="#inference">Inference</a>
         <a href="#notes">Notes</a>
       </nav>
     </header>
@@ -56,11 +58,11 @@
             nightfall — and the next second carries it out.
           </p>
           <dl class="spec">
-            <div><dt>DiT throughput</dt><dd>43 fps</dd></div>
-            <div><dt>Block</dt><dd>1 second</dd></div>
-            <div><dt>Hardware</dt><dd>4 × H800</dd></div>
-            <div><dt>Resolution</dt><dd>512 × 768</dd></div>
-            <div><dt>Continuous</dt><dd>10 min</dd></div>
+            <div><dt>Throughput</dt><dd>43 <em>fps, DiT</em></dd></div>
+            <div><dt>Block</dt><dd>1 <em>second</em></dd></div>
+            <div><dt>Hardware</dt><dd>4 <em>× H800</em></dd></div>
+            <div><dt>Resolution</dt><dd>512 <em>× 768</em></dd></div>
+            <div><dt>Continuous</dt><dd>10 <em>min</em></dd></div>
           </dl>
           <p class="hero-note">
             Generation runs faster than playback, so a take can be watched as it is produced. Audio
@@ -160,82 +162,208 @@
         <div class="classes" data-classes></div>
       </section>
 
-      <section id="method" class="method">
+      <section id="data" class="data">
         <header class="sec-head">
-          <p class="eyebrow">Method</p>
-          <h2>How it holds together</h2>
+          <p class="eyebrow">Data</p>
+          <h2>Two sources, one automatic annotation pipeline</h2>
+          <p class="sec-lede">
+            What training needs is not a video with one caption on it, but a
+            <strong>video cut into segments, each with its own prompt</strong> carrying that
+            segment's action and line. That structure comes out of the pipeline below.
+          </p>
         </header>
-        <ol class="steps">
+
+        <div class="flow">
+          <div class="flow-col">
+            <p class="flow-label">Sources</p>
+            <article class="card src">
+              <b class="qty">1000<em>clips</em></b>
+              <h3>Existing short footage</h3>
+              <p>Five seconds each. Small and clean, used to warm the model up before the full run.</p>
+            </article>
+            <article class="card src">
+              <b class="qty">1000<em>clips</em></b>
+              <h3>Constructed character performances</h3>
+              <p>
+                Fourteen seconds each. Long-form acting data built for this project, used for the
+                full training run.
+              </p>
+            </article>
+          </div>
+
+          <div class="flow-arrow" aria-hidden="true"><span></span></div>
+
+          <div class="flow-col">
+            <p class="flow-label">Annotation pipeline</p>
+            <article class="card tool">
+              <b class="tool-name">TransNetV2</b>
+              <h3>Shot detection</h3>
+              <p>Finds the shot boundaries, which decide where a segment is allowed to break.</p>
+            </article>
+            <article class="card tool">
+              <b class="tool-name">Whisper</b>
+              <h3>Speech timestamps</h3>
+              <p>Marks where each line starts and ends, so voice lines land inside the right segment.</p>
+            </article>
+            <article class="card tool">
+              <b class="tool-name">Gemini</b>
+              <h3>Per-segment captions</h3>
+              <p>Describes the action and the scene of each segment; that description becomes its prompt.</p>
+            </article>
+          </div>
+
+          <div class="flow-arrow" aria-hidden="true"><span></span></div>
+
+          <div class="flow-col">
+            <p class="flow-label">Output</p>
+            <article class="card out">
+              <h3>Video + segmented prompts</h3>
+              <p>
+                One sample is a continuous video plus a list of prompts cut along time. In training
+                each AV block sees only the prompt of its own segment — which is exactly how the
+                model is driven at inference, one cue per segment.
+              </p>
+              <div class="out-demo" aria-hidden="true">
+                <div class="out-row"><span>seg 1</span><i class="action"></i><p>waves a greeting · line</p></div>
+                <div class="out-row"><span>seg 2</span><i class="scene"></i><p>a breeze starts, leaves move</p></div>
+                <div class="out-row"><span>seg 3</span><i class="prop"></i><p>lifts the teapot · line</p></div>
+                <div class="out-row"><span>…</span><i class="standby"></i><p></p></div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="training" class="training">
+        <header class="sec-head">
+          <p class="eyebrow">Training</p>
+          <h2>Three stages, each one closer to streaming</h2>
+          <p class="sec-lede">
+            A block is one second of picture and sound. Video and audio latents run at different
+            rates — 3 fps and 25 fps — so a block is cut on a one-second boundary and carries
+            both: 4 + 3<i>k</i> video frames beside 26 + 25<i>k</i> audio frames. All six attention
+            paths, including the two cross-modal ones, carry a causal mask, so nothing inside a
+            block can read the future.
+          </p>
+        </header>
+
+        <ol class="stages">
           <li>
-            <h3>One-second audio-video blocks</h3>
+            <div class="stage-tag">Stage one</div>
+            <h3>Frame-parallel teacher forcing + resample forcing</h3>
             <p>
-              Video and audio latents run at different rates — 3 fps and 25 fps — so a block is cut
-              on a one-second boundary and carries both: 4 + 3<i>k</i> video frames beside 26 +
-              25<i>k</i> audio frames. All six attention paths, including the two cross-modal ones,
-              carry a causal mask, so nothing inside a block can read the future.
+              The 5-second clips warm the model up, then the 14-second clips carry the full run. The
+              whole sequence shares one timestep and all frames denoise in parallel, which moves the
+              bidirectional model onto a causal structure without breaking the base prior.
+              <strong>Resample forcing</strong> is folded in: the model is rolled out without
+              gradients and the next block is supervised on the history it actually produced rather
+              than on ground truth alone, so training sits on the distribution inference will meet.
             </p>
+            <figure>
+              <div class="noisefig" data-fig="tf"></div>
+              <figcaption>every block at the same noise level</figcaption>
+            </figure>
           </li>
           <li>
-            <h3>Trained on its own output, one noise level per block</h3>
+            <div class="stage-tag">Stage two</div>
+            <h3>Diffusion forcing</h3>
             <p>
-              The first stage is teacher forcing on real long video, with resample forcing folded
-              into it: the model is rolled out without gradients and the next block is supervised on
-              the history it actually produced rather than on ground truth alone. That is what turns
-              the bidirectional diffusion model causal without drifting from the distribution it
-              meets at inference. Diffusion forcing follows and gives every block its own noise
-              level; few-step distillation comes last. Every stage uses a concatenated layout with
-              one shared RoPE index and a sparse causal mask, so a single forward pass supervises
-              <i>N</i> blocks.
+              Every block gets <strong>its own noise level</strong>, which makes the training
+              block-autoregressive. Inside one forward pass the earlier blocks are quiet and look
+              like already-generated history, the later ones are noisy and look like the future
+              still to come — the same shape as rolling forward one block at a time at inference.
             </p>
-            <p class="step-aside">
-              Per-block noise levels are what make the inference pipeline below possible: neighbouring
-              blocks can sit at different denoising steps at the same time. They also keep the KV
-              cache full of noisy latents, which filters the history — a block inherits far less of
-              whatever its predecessors got wrong, so error stops compounding down a long take.
-            </p>
+            <figure>
+              <div class="noisefig" data-fig="df"></div>
+              <figcaption>one noise level per block, rising along the sequence</figcaption>
+            </figure>
           </li>
           <li>
-            <h3>A KV cache with a fixed budget</h3>
+            <div class="stage-tag">Stage three</div>
+            <h3>Few-step distillation</h3>
             <p>
-              Long context is split into an anchor, a content memory, and a FIFO of recent blocks.
+              Distribution matching distillation takes sampling from <strong>30 steps down to
+              4</strong>. This is the precondition for real-time throughput — without it the
+              multi-GPU pipeline below still could not keep ahead of playback.
+            </p>
+            <figure>
+              <div class="stepfig" data-fig="dmd"></div>
+              <figcaption>30-step sampling → 4-step sampling</figcaption>
+            </figure>
+          </li>
+        </ol>
+
+        <aside class="keynote">
+          <p class="eyebrow">Across all three stages</p>
+          <h3>Per-segment prompt cross attention</h3>
+          <p>
+            The global prompt holds the set, the character and the style; the local prompt holds
+            this segment's action and line. An AV block
+            <strong>cross-attends only to the text encoding of its own segment</strong>. That is
+            what makes a live swap safe: replacing the current instruction neither disturbs the
+            history already generated nor touches the conditions you left alone.
+          </p>
+          <div class="attn" data-fig="attn" aria-hidden="true"></div>
+          <p class="keynote-note">
+            In the <em>Mascot room</em> take the operator edits the global prompt instead — adding
+            <span class="q">lights off, the room is in darkness</span> — and the room goes dark
+            without the character resetting.
+          </p>
+        </aside>
+      </section>
+
+      <section id="inference" class="inference">
+        <header class="sec-head">
+          <p class="eyebrow">Inference</p>
+          <h2>Timestep parallelism: one noise level per GPU</h2>
+          <p class="sec-lede">
+            Inference is split by <strong>denoising step</strong>, not by frame. Four GPUs each keep
+            one noise level's KV resident; a block passes through the four levels in order and each
+            finished level hands the latent to the next GPU over <strong>NCCL P2P</strong>. At
+            steady state all four GPUs are working on four different blocks at once, and every time
+            slice completes one block.
+          </p>
+        </header>
+
+        <div class="wavefront" data-wavefront></div>
+
+        <div class="infer-notes">
+          <div>
+            <h3>Why split by step and not by frame</h3>
+            <p>
+              Splitting by frame needs cross-GPU traffic inside a block, and a block-causal model's
+              blocks are small — one second — so the communication would eat the gain. Split by
+              denoising level, each GPU passes one latent per block boundary: fixed volume,
+              independent of resolution.
+            </p>
+          </div>
+          <div>
+            <h3>A fifth GPU, off the critical path</h3>
+            <p>
+              One separate GPU carries prompt encoding and <strong>incremental VAE</strong> coding
+              <strong>asynchronously</strong>. Only the DiT is left on the generation path, which is
+              also why the 43 fps figure counts DiT alone — decoding and encoding never take a slice
+              of the denoising pipeline.
+            </p>
+          </div>
+          <div>
+            <h3>Why a long take does not slow down</h3>
+            <p>
+              Long-context KV is split into an anchor, a content memory and a FIFO of recent blocks.
               Each layer scores its own keys on attention quality and temporal diversity and evicts
               down to a top-<i>M</i> budget, so a ten-minute take costs the same per block as the
               first minute.
             </p>
-          </li>
-          <li>
-            <h3>Global and local prompts, separated</h3>
+          </div>
+          <div>
+            <h3>What it costs to start</h3>
             <p>
-              The global prompt holds the set, the character, and the style. The local prompt holds
-              this shot's action and line. A block cross-attends only to its own local prompt, which
-              is what makes a live swap safe: replace the instruction and the parts you did not
-              touch stay where they were.
+              The first frame waits for the four-step pipeline to fill, about
+              <strong>2 seconds</strong>, with VAE decoding counted separately. The same model
+              without timestep parallelism runs 30 steps at roughly 0.4 s per step, which is what
+              real-time had to be won back from.
             </p>
-            <p class="step-aside">
-              In the <em>Mascot room</em> take the operator edits the global prompt instead — adding
-              <span class="q">lights off, the room is in darkness</span> — and the room goes dark
-              without the character resetting.
-            </p>
-          </li>
-          <li>
-            <h3>One denoising level per GPU</h3>
-            <p>
-              Inference is split by denoising level rather than by frame. Each GPU keeps one level's
-              KV resident and passes latents to the next over NCCL P2P, so blocks flow through the
-              levels as a pipeline. With few-step distillation and FlashAttention-3 this reaches 43
-              fps on 4 × H800 at 512 × 768 — DiT only, at steady state.
-            </p>
-          </li>
-        </ol>
-        <div class="figures">
-          <figure>
-            <img src="./media/figures/training.png" alt="Training schematic: teacher forcing, diffusion forcing and resample forcing in one concatenated layout" loading="lazy" />
-            <figcaption>Teacher, diffusion and resample forcing, in one concatenated layout.</figcaption>
-          </figure>
-          <figure>
-            <img src="./media/figures/pipeline.png" alt="Inference schematic: denoising levels distributed across GPUs as a pipeline" loading="lazy" />
-            <figcaption>Denoising levels pinned to GPUs; latents pipelined block by block.</figcaption>
-          </figure>
+          </div>
         </div>
       </section>
 
