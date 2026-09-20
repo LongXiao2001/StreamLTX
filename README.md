@@ -13,8 +13,9 @@ one-second blocks.
 - A breakdown of what a single cue can change: body action, spoken dialogue, prop handling,
   and scene/weather/light.
 - The method: one-second AV blocks with causal masks on all six attention paths, teacher
-  forcing then resample forcing, a fixed-budget three-tier KV cache, separated global and
-  local prompts, and one denoising level per GPU.
+  forcing with resample forcing, then diffusion forcing and few-step distillation, a
+  fixed-budget three-tier KV cache, separated global and local prompts, and one denoising
+  level per GPU.
 
 43 fps on 4 × H800 at 512 × 768, ten-minute continuous takes. The fps figure is steady-state
 DiT denoising throughput only; text encoding, VAE and audio decoding and muxing are not counted,

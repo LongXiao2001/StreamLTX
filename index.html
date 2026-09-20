@@ -8,7 +8,7 @@
       name="description"
       content="Stream LTX rebuilds LTX-2.3 into a block-causal audio-video model that generates one second at a time and accepts new instructions between blocks: actions, dialogue, props, weather and light."
     />
-    <meta name="theme-color" content="#0a0c12" />
+    <meta name="theme-color" content="#0a0a0c" />
     <meta property="og:title" content="Stream LTX — direct a video stream while it runs" />
     <meta
       property="og:description"
@@ -20,7 +20,7 @@
     <meta name="twitter:card" content="summary_large_image" />
     <link
       rel="icon"
-      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%23090b11'/><circle cx='16' cy='16' r='7' fill='%23ff4433'/></svg>"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%230a0a0c'/><circle cx='16' cy='16' r='7' fill='%23ff4433'/></svg>"
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -135,11 +135,13 @@
           </div>
 
           <div class="cuesheet">
-            <div class="cuesheet-head">
-              <h3 data-title></h3>
-              <p data-blurb></p>
+            <div class="cuesheet-inner">
+              <div class="cuesheet-head">
+                <h3 data-title></h3>
+                <p data-blurb></p>
+              </div>
+              <ol class="cues" data-cues></ol>
             </div>
-            <ol class="cues" data-cues></ol>
           </div>
         </div>
       </section>
@@ -174,13 +176,22 @@
             </p>
           </li>
           <li>
-            <h3>Trained twice, the second time on its own output</h3>
+            <h3>Trained on its own output, one noise level per block</h3>
             <p>
-              Teacher forcing on real long video turns the bidirectional diffusion model causal.
-              Resample forcing then rolls the model out without gradients and supervises the next
-              block on the history the model actually produced, which is the distribution it will
-              meet at inference. Both stages use a concatenated layout with one shared RoPE index
-              and a sparse causal mask, so a single forward pass supervises <i>N</i> blocks.
+              The first stage is teacher forcing on real long video, with resample forcing folded
+              into it: the model is rolled out without gradients and the next block is supervised on
+              the history it actually produced rather than on ground truth alone. That is what turns
+              the bidirectional diffusion model causal without drifting from the distribution it
+              meets at inference. Diffusion forcing follows and gives every block its own noise
+              level; few-step distillation comes last. Every stage uses a concatenated layout with
+              one shared RoPE index and a sparse causal mask, so a single forward pass supervises
+              <i>N</i> blocks.
+            </p>
+            <p class="step-aside">
+              Per-block noise levels are what make the inference pipeline below possible: neighbouring
+              blocks can sit at different denoising steps at the same time. They also keep the KV
+              cache full of noisy latents, which filters the history — a block inherits far less of
+              whatever its predecessors got wrong, so error stops compounding down a long take.
             </p>
           </li>
           <li>
@@ -218,8 +229,8 @@
         </ol>
         <div class="figures">
           <figure>
-            <img src="./media/figures/training.png" alt="Training schematic: teacher forcing and resample forcing stages" loading="lazy" />
-            <figcaption>Teacher forcing and resample forcing, in one concatenated layout.</figcaption>
+            <img src="./media/figures/training.png" alt="Training schematic: teacher forcing, diffusion forcing and resample forcing in one concatenated layout" loading="lazy" />
+            <figcaption>Teacher, diffusion and resample forcing, in one concatenated layout.</figcaption>
           </figure>
           <figure>
             <img src="./media/figures/pipeline.png" alt="Inference schematic: denoising levels distributed across GPUs as a pipeline" loading="lazy" />
@@ -256,13 +267,6 @@
               it does.
             </p>
           </div>
-          <div>
-            <h3>Credit</h3>
-            <p>
-              Built by Long Xiao during a research internship at Tencent, June–September 2026, on
-              top of LTX-2.3.
-            </p>
-          </div>
         </div>
       </section>
     </main>
@@ -274,7 +278,7 @@
         <a href="https://github.com/LongXiao2001">GitHub</a>
         <a href="mailto:1215497652@qq.com">Email</a>
       </nav>
-      <p class="foot-fine">Long Xiao · Beihang University · 2026</p>
+      <p class="foot-fine">Block-causal LTX-2.3 · real-time audio + video · 2026</p>
     </footer>
 
     <script src="./assets/takes.js"></script>
