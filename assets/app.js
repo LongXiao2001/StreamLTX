@@ -380,4 +380,30 @@
       '<span>GPU 5 runs <b>async</b> and never takes a slice of the denoising pipeline</span>' +
       '</div>';
   }
+
+  /* ---------- audio row ---------- */
+
+  var audioScroll = document.querySelector('[data-audio-scroll]');
+  var audioBar = document.querySelector('[data-audio-bar]');
+  var audioThumb = audioBar ? audioBar.querySelector('i') : null;
+  if (audioScroll && audioBar && audioThumb) {
+    function syncAudioBar() {
+      var max = audioScroll.scrollWidth - audioScroll.clientWidth;
+      var visible = audioScroll.scrollWidth ? audioScroll.clientWidth / audioScroll.scrollWidth : 1;
+      var width = Math.max(visible * 100, 12);
+      var left = max <= 1 ? 0 : (audioScroll.scrollLeft / max) * (100 - width);
+      audioThumb.style.width = width + '%';
+      audioThumb.style.left = left + '%';
+      audioBar.hidden = max <= 1;
+    }
+    audioScroll.addEventListener('scroll', syncAudioBar, { passive: true });
+    window.addEventListener('resize', syncAudioBar);
+    audioBar.addEventListener('click', function (event) {
+      var rect = audioBar.getBoundingClientRect();
+      var max = audioScroll.scrollWidth - audioScroll.clientWidth;
+      var ratio = rect.width ? (event.clientX - rect.left) / rect.width : 0;
+      audioScroll.scrollLeft = Math.min(1, Math.max(0, ratio)) * max;
+    });
+    syncAudioBar();
+  }
 })();

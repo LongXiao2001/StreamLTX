@@ -7,7 +7,7 @@ changed while the stream is still running.
 **Demo:** https://longxiao2001.github.io/StreamLTX/
 
 Code: https://github.com/LongXiao2001/StreamLTX
-Weights: https://huggingface.co/LongXiao2001/StreamLTX — coming soon.
+Weights: https://huggingface.co/longxiaooo/StreamLTX — coming soon.
 
 ## Two ways to drive it
 

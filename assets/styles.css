@@ -625,23 +625,39 @@ section {
 /* ---------- reference audio + first frame ---------- */
 
 .audio-scroll {
+  --peek: clamp(220px, 20vw, 320px);
   display: flex;
   gap: 16px;
   max-width: 1500px;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
-  padding-bottom: 8px;
-  scrollbar-width: thin;
-  scrollbar-color: var(--rule) transparent;
+  scrollbar-width: none;
 }
 .audio-scroll::-webkit-scrollbar {
-  height: 8px;
+  display: none;
+  height: 0;
 }
-.audio-scroll::-webkit-scrollbar-thumb {
+.audio-bar {
+  position: relative;
+  max-width: 1500px;
+  height: 1px;
+  margin-top: 18px;
   background: var(--rule);
+  cursor: pointer;
+}
+.audio-bar i {
+  position: absolute;
+  top: -1px;
+  left: 0;
+  height: 3px;
+  background: var(--cream);
+  pointer-events: none;
+}
+.audio-bar:hover i {
+  background: var(--tally);
 }
 .audio-card {
-  flex: 0 0 min(680px, 82vw);
+  flex: 0 0 clamp(320px, calc((100% - var(--peek) - 16px) / 2), 620px);
   scroll-snap-align: start;
   padding: 14px 14px 18px;
   background: var(--panel);
