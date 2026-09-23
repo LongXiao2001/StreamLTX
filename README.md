@@ -6,7 +6,8 @@ changed while the stream is still running.
 
 **Demo:** https://longxiao2001.github.io/StreamLTX/
 
-Code and weights are not released yet. Both are marked *coming soon* on the demo page.
+Code: https://github.com/LongXiao2001/StreamLTX
+Weights are not released yet.
 
 ## Two ways to drive it
 

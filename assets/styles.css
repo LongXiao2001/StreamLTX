@@ -256,6 +256,15 @@ section {
   letter-spacing: 0.13em;
   text-transform: uppercase;
 }
+.release-link {
+  text-decoration: none;
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: 1px;
+}
+.release-link:hover {
+  color: var(--paper);
+  border-bottom-color: var(--tally);
+}
 .release-item em {
   margin-left: 8px;
   padding: 3px 8px 2px;
