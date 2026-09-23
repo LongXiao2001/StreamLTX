@@ -7,7 +7,7 @@ changed while the stream is still running.
 **Demo:** https://longxiao2001.github.io/StreamLTX/
 
 Code: https://github.com/LongXiao2001/StreamLTX
-Weights are not released yet.
+Weights: https://huggingface.co/LongXiao2001/StreamLTX — coming soon.
 
 ## Two ways to drive it
 
@@ -21,6 +21,8 @@ fixes who is in the shot; the audio fixes the voice and the timing. The model st
 video forward for the length of the track, mouth and motion following the sound, with no new
 text cue in between. The demo shows three of these in a row you can scroll: ten
 seconds, forty-eight seconds, and one that runs for three minutes and thirty-three seconds.
+The audio is a cover of 蒋雪儿's 梦的翅膀受了伤 by an online creator, Unravel from Tokyo Ghoul,
+and a 奶龙 AI cover of 陶喆's 寂寞的季节.
 
 ## How it is built
 
