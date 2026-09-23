@@ -38,6 +38,7 @@
       <span class="tally" aria-label="Live"><i></i>on air</span>
       <nav>
         <a href="#takes">Takes</a>
+        <a href="#audio">Audio</a>
         <a href="#control">Control</a>
         <a href="#data">Data</a>
         <a href="#training">Training</a>
@@ -48,6 +49,11 @@
 
     <main id="top">
       <section class="hero">
+        <div class="release">
+          <a class="release-who" href="https://longxiao2001.github.io">Long Xiao</a>
+          <span class="release-item">Code <em>Coming soon</em></span>
+          <span class="release-item">Weights <em>Coming soon</em></span>
+        </div>
         <div class="hero-type">
           <p class="eyebrow">Block-causal LTX-2.3 · joint audio + video</p>
           <h1>Direct the stream<br />while it runs.</h1>
@@ -146,6 +152,69 @@
             </div>
           </div>
         </div>
+      </section>
+
+      <section id="audio" class="audio">
+        <header class="sec-head">
+          <p class="eyebrow">Reference audio + first frame</p>
+          <h2>A first frame and a voice.</h2>
+          <p class="sec-lede">
+            Upload one still and a reference audio track. The still is the subject and the shot.
+            The track is the voice, and the mouth is timed to it. Generation continues for the
+            length of the audio, with no text cue in between. Scroll sideways for the three clips.
+          </p>
+        </header>
+
+        <div class="audio-scroll">
+          <article class="audio-card">
+            <header><b>Retriever</b><span>0:10</span></header>
+            <video
+              src="./media/tai2v/retriever.mp4"
+              poster="./media/posters/tai2v-retriever.jpg"
+              controls
+              playsinline
+              preload="none"
+            ></video>
+            <p>A photographed dog. The opening frame is the reference still, and the voice on the track is the reference audio.</p>
+          </article>
+          <article class="audio-card">
+            <header><b>Street</b><span>0:48</span></header>
+            <video
+              src="./media/tai2v/street.mp4"
+              poster="./media/posters/tai2v-street.jpg"
+              controls
+              playsinline
+              preload="none"
+            ></video>
+            <p>An illustrated character. Expression and mouth follow the uploaded voice from the single frame that opened the shot.</p>
+          </article>
+          <article class="audio-card">
+            <header><b>Beach</b><span>3:33</span></header>
+            <video
+              src="./media/tai2v/beach.mp4"
+              poster="./media/posters/tai2v-beach.jpg"
+              controls
+              playsinline
+              preload="none"
+            ></video>
+            <p>Three minutes and thirty-three seconds from one still and one audio track.</p>
+          </article>
+        </div>
+
+        <ul class="audio-facts">
+          <li>
+            <b>First frame</b>
+            <span>The opening image of each clip. It sets the subject, the style and the shot, and the stream keeps them.</span>
+          </li>
+          <li>
+            <b>Reference audio</b>
+            <span>Uploaded with the still. It is the voice you hear, and it is what the mouth is timed to.</span>
+          </li>
+          <li>
+            <b>How long it runs</b>
+            <span>For the length of the audio. The longest clip here is 3:33.</span>
+          </li>
+        </ul>
       </section>
 
       <section id="control" class="control">
@@ -389,10 +458,11 @@
             </p>
           </div>
           <div>
-            <h3>Availability</h3>
+            <h3>Code and weights</h3>
             <p>
-              No code and no weights are released here. This page documents the work and shows what
-              it does.
+              Neither is released yet. Both are marked coming soon at the top of this page. What is
+              here is the work itself: the takes, the audio-driven streams, and how they are trained
+              and run.
             </p>
           </div>
         </div>

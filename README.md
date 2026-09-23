@@ -1,48 +1,57 @@
-# Stream LTX — project page
+# Stream LTX
 
-Project page for **Stream LTX**: a block-causal rebuild of LTX-2.3 for real-time joint
-audio-video generation, where new text instructions can be handed to the model between
-one-second blocks.
+Block-causal LTX-2.3 for real-time joint audio and video. The model emits one second of
+picture and sound at a time, and because it never looks ahead, what happens next can be
+changed while the stream is still running.
 
-**Live page:** https://longxiao2001.github.io/StreamLTX/
+**Demo:** https://longxiao2001.github.io/StreamLTX/
 
-## What is on the page
+Code and weights are not released yet. Both are marked *coming soon* on the demo page.
 
-- Five uncut console recordings of continuous runs, each with a cue sheet. Every cue is
-  timecoded to the moment the instruction reached the model, and clicking it seeks the take.
-- A breakdown of what a single cue can change: body action, spoken dialogue, prop handling,
-  and scene/weather/light.
-- The method: one-second AV blocks with causal masks on all six attention paths, teacher
-  forcing with resample forcing, then diffusion forcing and few-step distillation, a
-  fixed-budget three-tier KV cache, separated global and local prompts, and one denoising
-  level per GPU.
+## Two ways to drive it
 
-43 fps on 4 × H800 at 512 × 768, ten-minute continuous takes. The fps figure is steady-state
-DiT denoising throughput only; text encoding, VAE and audio decoding and muxing are not counted,
-and first-block latency is reported separately.
+**Text, between blocks.** A short instruction — a gesture, a spoken line, an object to pick
+up, rain, the lights going out — is handed to the model between one-second blocks, and the
+next second carries it out. The set and the character hold. The page shows five uncut runs.
+Click any cue and the recording jumps to the second that instruction reached the model.
 
-## Repository layout
+**A reference audio track and a first frame.** Upload a voice and an opening image. The frame
+fixes who is in the shot; the audio fixes the voice and the timing. The model streams the
+video forward for the length of the track, mouth and motion following the sound, with no new
+text cue in between. The demo shows three of these in a row you can scroll: ten
+seconds, forty-eight seconds, and one that runs for three minutes and thirty-three seconds.
 
-```
-index.html            page shell
-assets/styles.css     styles
-assets/takes.js       cue sheet data for the five takes
-assets/app.js         tabs, cue sheet, block strip
-media/takes/          console recordings
-media/posters/        video posters
-media/figures/        training and inference schematics
-```
+## How it is built
 
-Static, no build step. Open `index.html` directly, or serve the folder:
+A block is one second and carries both modalities. Video and audio latents run at different
+rates, so each block holds 4 + 3*k* video frames beside 26 + 25*k* audio frames, and all six
+attention paths — including the two cross-modal ones — are causally masked.
 
-```sh
-python3 -m http.server 8000
-```
+Training moves the bidirectional model onto that structure in three stages. Frame-parallel
+teacher forcing, with resample forcing folded in, supervises the next block on the history the
+model actually produced rather than on ground truth alone. Diffusion forcing then gives every
+block its own noise level, so one forward pass looks like rolling forward at inference.
+Distribution matching distillation takes sampling from 30 steps down to 4.
 
-## Notes
+The global prompt holds the set, the character and the style. The local prompt holds this
+segment's action and line, and a block cross-attends only to its own segment, which is what
+makes a live swap safe.
 
-The recordings are screen captures of an internal research prototype. No code or weights
-are released here.
+Inference is split by denoising step, not by frame: four GPUs each keep one noise level's KV
+and hand latents on over NCCL P2P, so at steady state four blocks are in flight and every time
+slice finishes one. A fifth GPU carries prompt encoding and incremental VAE coding off the
+critical path. Long context is an anchor, a content memory and a FIFO of recent blocks, each
+layer evicting down to a fixed budget, so a ten-minute take costs the same per block as the
+first minute.
 
-Built by [Long Xiao](https://longxiao2001.github.io) during a research internship at
-Tencent, June–September 2026.
+43 fps on 4 × H800 at 512 × 768. That figure is steady-state DiT denoising throughput only —
+text encoding, VAE and audio decoding and muxing are not in it, and the first frame waits about
+two seconds for the pipeline to fill.
+
+## On this page
+
+The recordings are screen captures of a research prototype, at the resolution and frame rate it
+actually ran. Cue timecodes mark when an instruction reached the model; the result lands a block
+or two later.
+
+Built by [Long Xiao](https://longxiao2001.github.io).
