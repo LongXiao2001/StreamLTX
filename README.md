@@ -16,23 +16,23 @@ next second carries it out. The set and the character hold. Five uncut runs:
 
 **Garden tea house** · 1:31
 
-<video src="media/takes/tea-house.mp4" poster="media/posters/tea-house.jpg" controls width="720"></video>
+https://github.com/user-attachments/assets/1ce5e0a7-0825-4c9c-a2ad-643da45b44bc
 
 **Star lantern** · 1:37
 
-<video src="media/takes/star-lantern.mp4" poster="media/posters/star-lantern.jpg" controls width="720"></video>
+https://github.com/user-attachments/assets/a2840981-c3c9-44f3-9cd2-e18034fd1ed6
 
 **Lavender field** · 1:26
 
-<video src="media/takes/lavender-field.mp4" poster="media/posters/lavender-field.jpg" controls width="720"></video>
+https://github.com/user-attachments/assets/5d003dde-21b7-4013-99d9-89f0ba3815f1
 
 **Evening field** · 2:45
 
-<video src="media/takes/evening-field.mp4" poster="media/posters/evening-field.jpg" controls width="720"></video>
+https://github.com/user-attachments/assets/bf9d914f-d5bf-40f3-a6d7-a243e1446621
 
 **Mascot room** · 1:20
 
-<video src="media/takes/mascot-room.mp4" poster="media/posters/mascot-room.jpg" controls width="720"></video>
+https://github.com/user-attachments/assets/f4535ea9-0304-4ef7-aa2b-44ac66d08aaf
 
 **A reference audio track and a first frame.** Upload a voice and an opening image. The frame
 fixes who is in the shot; the audio fixes the voice and the timing. The model streams the
@@ -41,19 +41,19 @@ text cue in between.
 
 **Retriever** · 0:10
 
-<video src="media/tai2v/retriever.mp4" poster="media/posters/tai2v-retriever.jpg" controls width="720"></video>
+https://github.com/user-attachments/assets/37e4f279-755a-4fab-a749-993848022c12
 
 A photographed dog. Audio: a cover of 蒋雪儿, 梦的翅膀受了伤, sung by an online creator.
 
 **Street** · 0:48
 
-<video src="media/tai2v/street.mp4" poster="media/posters/tai2v-street.jpg" controls width="720"></video>
+https://github.com/user-attachments/assets/89f1d460-0066-4290-87ee-abb26c453838
 
 An illustrated character. Audio: Unravel, the theme of Tokyo Ghoul (东京喰种).
 
 **Beach** · 3:33
 
-<video src="media/tai2v/beach.mp4" poster="media/posters/tai2v-beach.jpg" controls width="720"></video>
+https://github.com/user-attachments/assets/197a8d44-3310-487c-ac68-f5a3ecb277e1
 
 Audio: a 奶龙 AI cover of 陶喆, 寂寞的季节.
 
