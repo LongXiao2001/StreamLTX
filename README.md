@@ -6,37 +6,56 @@ changed while the stream is still running.
 
 **Demo:** https://longxiao2001.github.io/StreamLTX/
 
-Code: https://github.com/LongXiao2001/StreamLTX — coming soon.
 Hugging Face: https://huggingface.co/longxiaooo/StreamLTX — coming soon.
-
-### Reference audio + first frame
-
-<video src="https://github.com/LongXiao2001/StreamLTX/raw/main/media/tai2v/retriever.mp4" controls width="720"></video>
-
-Retriever, 0:10. A photographed dog. Audio: a cover of 蒋雪儿, 梦的翅膀受了伤, sung by an online creator.
-
-<video src="https://github.com/LongXiao2001/StreamLTX/raw/main/media/tai2v/street.mp4" controls width="720"></video>
-
-Street, 0:48. An illustrated character. Audio: Unravel, the theme of Tokyo Ghoul (东京喰种).
-
-<video src="https://github.com/LongXiao2001/StreamLTX/raw/main/media/tai2v/beach.mp4" controls width="720"></video>
-
-Beach, 3:33. Audio: a 奶龙 AI cover of 陶喆, 寂寞的季节.
 
 ## Two ways to drive it
 
 **Text, between blocks.** A short instruction — a gesture, a spoken line, an object to pick
 up, rain, the lights going out — is handed to the model between one-second blocks, and the
-next second carries it out. The set and the character hold. The page shows five uncut runs.
-Click any cue and the recording jumps to the second that instruction reached the model.
+next second carries it out. The set and the character hold. Five uncut runs:
+
+**Garden tea house** · 1:31
+
+<video src="media/takes/tea-house.mp4" poster="media/posters/tea-house.jpg" controls width="720"></video>
+
+**Star lantern** · 1:37
+
+<video src="media/takes/star-lantern.mp4" poster="media/posters/star-lantern.jpg" controls width="720"></video>
+
+**Lavender field** · 1:26
+
+<video src="media/takes/lavender-field.mp4" poster="media/posters/lavender-field.jpg" controls width="720"></video>
+
+**Evening field** · 2:45
+
+<video src="media/takes/evening-field.mp4" poster="media/posters/evening-field.jpg" controls width="720"></video>
+
+**Mascot room** · 1:20
+
+<video src="media/takes/mascot-room.mp4" poster="media/posters/mascot-room.jpg" controls width="720"></video>
 
 **A reference audio track and a first frame.** Upload a voice and an opening image. The frame
 fixes who is in the shot; the audio fixes the voice and the timing. The model streams the
 video forward for the length of the track, mouth and motion following the sound, with no new
-text cue in between. The demo shows three of these in a row you can scroll: ten
-seconds, forty-eight seconds, and one that runs for three minutes and thirty-three seconds.
-The audio is a cover of 蒋雪儿's 梦的翅膀受了伤 by an online creator, Unravel from Tokyo Ghoul,
-and a 奶龙 AI cover of 陶喆's 寂寞的季节.
+text cue in between.
+
+**Retriever** · 0:10
+
+<video src="media/tai2v/retriever.mp4" poster="media/posters/tai2v-retriever.jpg" controls width="720"></video>
+
+A photographed dog. Audio: a cover of 蒋雪儿, 梦的翅膀受了伤, sung by an online creator.
+
+**Street** · 0:48
+
+<video src="media/tai2v/street.mp4" poster="media/posters/tai2v-street.jpg" controls width="720"></video>
+
+An illustrated character. Audio: Unravel, the theme of Tokyo Ghoul (东京喰种).
+
+**Beach** · 3:33
+
+<video src="media/tai2v/beach.mp4" poster="media/posters/tai2v-beach.jpg" controls width="720"></video>
+
+Audio: a 奶龙 AI cover of 陶喆, 寂寞的季节.
 
 ## How it is built
 
