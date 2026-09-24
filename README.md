@@ -14,25 +14,25 @@ Hugging Face: https://huggingface.co/longxiaooo/StreamLTX — coming soon.
 up, rain, the lights going out — is handed to the model between one-second blocks, and the
 next second carries it out. The set and the character hold. Five uncut runs:
 
-**Garden tea house** · 1:31
-
-https://github.com/user-attachments/assets/1ce5e0a7-0825-4c9c-a2ad-643da45b44bc
-
 **Star lantern** · 1:37
 
 https://github.com/user-attachments/assets/a2840981-c3c9-44f3-9cd2-e18034fd1ed6
+
+**Garden tea house** · 1:31
+
+https://github.com/user-attachments/assets/1ce5e0a7-0825-4c9c-a2ad-643da45b44bc
 
 **Lavender field** · 1:26
 
 https://github.com/user-attachments/assets/5d003dde-21b7-4013-99d9-89f0ba3815f1
 
+**QQ room** · 1:20
+
+https://github.com/user-attachments/assets/f4535ea9-0304-4ef7-aa2b-44ac66d08aaf
+
 **Evening field** · 2:45
 
 https://github.com/user-attachments/assets/bf9d914f-d5bf-40f3-a6d7-a243e1446621
-
-**Mascot room** · 1:20
-
-https://github.com/user-attachments/assets/f4535ea9-0304-4ef7-aa2b-44ac66d08aaf
 
 **A reference audio track and a first frame.** Upload a voice and an opening image. The frame
 fixes who is in the shot; the audio fixes the voice and the timing. The model streams the
