@@ -624,11 +624,16 @@ section {
 
 /* ---------- reference audio + first frame ---------- */
 
+.audio-row {
+  margin-right: calc(var(--gutter) * -1);
+  margin-left: calc(var(--gutter) * -1);
+  padding-left: var(--gutter);
+  padding-right: clamp(20px, 2.4vw, 40px);
+}
 .audio-scroll {
-  --peek: clamp(220px, 20vw, 320px);
   display: flex;
   gap: 16px;
-  max-width: 1500px;
+  max-width: none;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   scrollbar-width: none;
@@ -639,25 +644,25 @@ section {
 }
 .audio-bar {
   position: relative;
-  max-width: 1500px;
-  height: 1px;
-  margin-top: 18px;
-  background: var(--rule);
+  max-width: none;
+  height: 2px;
+  margin-top: 16px;
+  background: #212126;
   cursor: pointer;
 }
 .audio-bar i {
   position: absolute;
-  top: -1px;
+  top: 0;
   left: 0;
-  height: 3px;
-  background: var(--cream);
+  height: 2px;
+  background: #3c3c44;
   pointer-events: none;
 }
 .audio-bar:hover i {
-  background: var(--tally);
+  background: #6e6e78;
 }
 .audio-card {
-  flex: 0 0 clamp(320px, calc((100% - var(--peek) - 16px) / 2), 620px);
+  flex: 0 0 clamp(280px, calc((100% - 16px) / 2.7), 780px);
   scroll-snap-align: start;
   padding: 14px 14px 18px;
   background: var(--panel);

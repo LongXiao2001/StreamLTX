@@ -6,8 +6,22 @@ changed while the stream is still running.
 
 **Demo:** https://longxiao2001.github.io/StreamLTX/
 
-Code: https://github.com/LongXiao2001/StreamLTX
-Weights: https://huggingface.co/longxiaooo/StreamLTX — coming soon.
+Code: https://github.com/LongXiao2001/StreamLTX — coming soon.
+Hugging Face: https://huggingface.co/longxiaooo/StreamLTX — coming soon.
+
+### Reference audio + first frame
+
+<video src="https://github.com/LongXiao2001/StreamLTX/raw/main/media/tai2v/retriever.mp4" controls width="720"></video>
+
+Retriever, 0:10. A photographed dog. Audio: a cover of 蒋雪儿, 梦的翅膀受了伤, sung by an online creator.
+
+<video src="https://github.com/LongXiao2001/StreamLTX/raw/main/media/tai2v/street.mp4" controls width="720"></video>
+
+Street, 0:48. An illustrated character. Audio: Unravel, the theme of Tokyo Ghoul (东京喰种).
+
+<video src="https://github.com/LongXiao2001/StreamLTX/raw/main/media/tai2v/beach.mp4" controls width="720"></video>
+
+Beach, 3:33. Audio: a 奶龙 AI cover of 陶喆, 寂寞的季节.
 
 ## Two ways to drive it
 
